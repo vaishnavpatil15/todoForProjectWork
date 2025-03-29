@@ -17,7 +17,7 @@ router.post("/register",async (req,res)=>{
 
         let user =await userModel.findOne({email:email});
         if(user){
-            res.send("you already have account . pls login");
+            res.send("you already have account pls login");
         }
 
         bcrypt.genSalt(10,(err,salt)=>{
@@ -29,7 +29,7 @@ router.post("/register",async (req,res)=>{
                     email,
                     password: hash
                 })
-                res.status(203).json(createdUser);
+                res.status(203).json({message:"registered successfully! "});
                 
             })
         })
@@ -44,7 +44,22 @@ router.post("/register",async (req,res)=>{
 })
 
 
-router
+router.post("/login", async (req,res)=>{
+
+    let {email,password}=req.body;
+
+    let user = await userModel.findOne({email:email});
+    if(!user) return res.send("email or password incorrect");
+    bcrypt.compare(password,user.password,(err,result)=>{
+        if(result){
+            res.status(200).json({message:"login successful"})
+        }
+        else{
+            res.send("email or password incorrect")
+        }
+    })
+
+})
 
 
 
