@@ -9,12 +9,12 @@ const registerUser = async (req,res)=>{
 
         let user =await userModel.findOne({email:email});
         if(user){
-            res.send("you already have account pls login");
+            return res.send("you already have account pls login");
         }
 
         bcrypt.genSalt(10,(err,salt)=>{
             bcrypt.hash(password,salt,async(err,hash)=>{
-                if(err) res.send(err.message)
+                if(err) return res.send(err.message)
                 
                 let createdUser = await userModel.create({
                     name,
